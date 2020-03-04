@@ -25,7 +25,10 @@ public class priority_queue < T extends Comparable<T>>
 
 	    }
 
-
+	 void SiftUp((int i, ArrayList<T> Ar)
+			 {
+		 
+			 }
 	 void SiftDown(int i, ArrayList<T> Ar)
 	 {
 		 int left=2*i+1;
