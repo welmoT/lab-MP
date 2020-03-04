@@ -2,43 +2,42 @@ package priority_queue;
 import java.util.ArrayList;
 
 
-public class priority_queue < T extends Comparable<T>> 
+public class priority_queue < T extends Comparable<T>>
 {
 	private  ArrayList < T > Array = new ArrayList < T > ();
-	
-	
+
 	priority_queue()
 	{
 		  this.Array = Array;
 	}
-	
-	
+
+
 	 void Add(T value)
-	    {
-		
+     {
 	     Array.add(value);
-	     for(int i = Array.size() / 2 - 1; i >= 0; i--)
-	     {
-	    	 SiftDown( i, Array);
-	    	   
-	     }
+	     SiftUp(Array.size()-1,Array);
+     }
 
-	    }
-
-	 void SiftUp((int i, ArrayList<T> Ar)
-			 {
-		 
-			 }
+	 void SiftUp(int i, ArrayList<T> Ar)
+     {
+		 		int parent = (i-1)/2;
+		 		while (i>0 && Ar.get( i ).compareTo( Ar.get(parent) ) > 0 )
+		 		{
+		 			swap(i,parent,Ar);
+		 			i=parent;
+		 			parent=(i-1)/2;
+		 		}
+      }
 	 void SiftDown(int i, ArrayList<T> Ar)
-	 {
+	  {
 		 int left=2*i+1;
 		 int right=2*i+2;
 		 int largest=i;
-		if ((left < Ar.size())&& Ar.get( left ).compareTo( Ar.get(i) ) > 0) 
+		if ((left < Ar.size())&& Ar.get( left ).compareTo( Ar.get(i) ) > 0)
 				{
-			
-			largest=left; 
-					
+
+			largest=left;
+
 				}
 
 		if( ( right < Ar.size() ) && Ar.get(right).compareTo(Ar.get(largest)) > 0)
@@ -47,13 +46,16 @@ public class priority_queue < T extends Comparable<T>>
 		}
 		if(largest != i && largest != -1)
 		{
-			T tmp;
-			tmp = Ar.get(i);
-			 Ar.set(i, Ar.get(largest));
-		
-			 Ar.set(largest, tmp);
+			swap(i,largest,Ar);
 			SiftDown(largest, Ar);
 		}
+	  }
+	 void swap(int i,int largest, ArrayList<T> Ar)
+	 {
+		 	T tmp;
+			tmp = Ar.get(i);
+			Ar.set(i, Ar.get(largest));
+			Ar.set(largest, tmp);
 	 }
 	 void Print()
 	    {
