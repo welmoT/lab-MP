@@ -47,21 +47,21 @@ class map <T extends Comparable<T>>
 	}
 	int BF(node <T> Node)
 	{
-		return Node.right.height-Node.left.height;
+		return height(Node.right)-height(Node.left);
 	}
 	void Overheigh (node <T> Node)
 	{
-		if(Node.left.height > Node.right.height)  
+		if(height(Node.left) >= height(Node.right))  
 			Node.height = Node.left.height + 1;
-		else
+		if(height(Node.left) < height(Node.right))
 			Node.height = Node.right.height + 1;
 	}
 	void Add(T key, T value)
 	{
 		//System.out.println( key.toString() );
-		if (this.root==null)
+		if (this.root == null)
         {
-            this.root=new node(key,value);
+            this.root = new node(key,value);
           //  System.out.println( key.toString() );
             count++;
         }
@@ -70,7 +70,7 @@ class map <T extends Comparable<T>>
             Addto(this.root, key,value);
         }
 	}
-	void Addto(node <T> Node, T key, T value)
+	node <T> Addto(node <T> Node, T key, T value)
     {
         if ( key.compareTo(Node.key) < 0)
         {
@@ -79,6 +79,7 @@ class map <T extends Comparable<T>>
             {
                 Node.left = new node(key, value);
          		Node.left.parent= Node;
+                //Overheigh(Node);
               // System.out.println(Node.key.toString());
                 count++;
             }
@@ -94,6 +95,7 @@ class map <T extends Comparable<T>>
             {
                 Node.right=new node(key, value);
                 Node.right.parent=Node;
+                //Overheigh(Node);
                //System.out.println(Node.key.toString());
                 count++;
             }
@@ -103,6 +105,9 @@ class map <T extends Comparable<T>>
                 Addto(Node.right,key, value);
             }
         }
+       //node <T> balanceNode = Balance (Node);
+        //BalanceNode = Overheigh(balanceNode);
+        return Balance(Node);
     }
     void print()
     {
@@ -117,10 +122,10 @@ class map <T extends Comparable<T>>
     }
     private void print_tree( node <T> Node )
     {
-        if( Node!=null)
+        if( Node != null)
         {
             print_tree( Node.left );
-            System.out.println( Node.key.toString() );
+            System.out.println(Node.height+"   " + Node.key.toString());
             print_tree( Node.right );
         }
     }
@@ -131,11 +136,11 @@ class map <T extends Comparable<T>>
    node <T> little_right_rotate(node <T> Rgh)
     {
     	node Lf = new node ();
-    	Lf= Rgh.left;
+    	Lf = Rgh.left;
     	//Lf.parent=Rgh;
     	Rgh.left = null;
-    	Rgh.left= Lf.right;
-    	Lf.right=Rgh;
+    	Rgh.left = Lf.right;
+    	Lf.right = Rgh;
     	Overheigh(Lf);
     	Overheigh(Rgh);
     	return Lf;
@@ -144,16 +149,74 @@ class map <T extends Comparable<T>>
     {
     	node Rgh = new node ();
     	Rgh = Lf.right;
-    	Lf.right=Rgh.left;
-    	Rgh.left=Lf;
+    	Lf.right = Rgh.left;
+    	Rgh.left = Lf;
     	Overheigh(Lf);
     	Overheigh(Rgh);
     	return Rgh;
     }
+    node <T> big_left_rotate(node <T> Lf)
+    {
+        if ( Lf.right == null) 
+        {
+            return Lf;
+        }
+        Lf.right = little_right_rotate(Lf.right);
+        return little_left_rotate(Lf);
+    }
+    node <T> big_right_rotate(node <T> Rgh)
+    {
+        if (Rgh.left == null) 
+        {
+            return Rgh;
+        }
+
+        Rgh.left = little_left_rotate(Rgh.left);
+
+        return little_right_rotate(Rgh);
+    }
 
     node <T> Balance (node <T> Node)
     {
-    	return Node;
+       Overheigh(Node);
+        if(BF(Node) == 2)
+        {
+            if ( BF(Node.right) < 0 ) 
+            {
+                    Node.right = little_right_rotate(Node.right);
+                    return little_left_rotate(Node);
+            }
+
+        }
+        if (BF(Node) == -2)
+        {
+            if (  BF(Node.left) > 0 ) 
+            {
+                    Node.left = little_left_rotate(Node.left);
+                    return little_right_rotate(Node);
+                
+            }
+    
+        }
+    	
+        return Node;
+    }
+
+    public String description() {
+        return diagramFor(this.root, "", "", "");
+    }
+
+    private String diagramFor(node<T> Node, String top, String root, String bottom) {
+
+        if ( Node == null ) { return root + "null\n"; }
+
+        if ( Node.left == null && Node.right == null ) {
+            return root + String.valueOf(Node.key) + "\n";
+        }
+
+        return diagramFor(Node.right, top + " ", top + "┌──", top + "│ ") 
+                + root + String.valueOf(Node.key) + "\n" 
+                + diagramFor(Node.left, bottom + "│ ", bottom + "└──", bottom + " ");
     }
    
 }
