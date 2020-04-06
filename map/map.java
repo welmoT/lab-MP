@@ -5,7 +5,7 @@ class node <T extends Comparable<T>>
 	T value;
 	node left;
 	node right;
-	//node parent;
+	node parent;
 	int height;
 	node()
 	{
@@ -19,7 +19,7 @@ class node <T extends Comparable<T>>
 		this.value = value;
 		this.left = null;
 		this.right = null;
-		//this.parent = null;
+		this.parent = null;
 		height = 1;
 	}
 	void copy( node <T> N1)
@@ -28,10 +28,51 @@ class node <T extends Comparable<T>>
 		this.value = N1.value;
 		this.left = N1.left;
 		this.right = N1.right;
-		//this.parent = N1.parent;
+		this.parent = N1.parent;
 	}  
 }
+ class TreeIterator {
+    private node next;
 
+    public TreeIterator(node root) {
+        next = root;
+        if(next == null)
+            return;
+
+        while (next.left != null)
+           next = next.left;
+    }
+
+    public boolean hasNext(){
+        return next != null;
+    }
+
+    public node next(){
+        //if(!hasNext()) throw new NoSuchElementException();
+        node r = next;
+
+        // If you can walk right, walk right, then fully left.
+        // otherwise, walk up until you come from left.
+        if(next.right != null) {
+            next = next.right;
+            while (next.left != null)
+                next = next.left;
+            return r;
+        }
+
+        while(true) {
+            if(next.parent == null) {
+                next = null;
+                return r;
+            }
+            if(next.parent.left == next) {
+                next = next.parent;
+               return r;
+            }
+            next = next.parent;
+        }
+     }
+ }
 class map <T extends Comparable<T>>
 {
 	node root;
@@ -57,6 +98,10 @@ class map <T extends Comparable<T>>
 		if(height(Node.left) < height(Node.right))
 			Node.height = height(Node.right) + 1;
 	}
+    node parent (node Node, node Temp)
+    {
+        return Temp.parent = Node;
+    }
     //insert
     node insert(node Node, T key, T value) 
     {
@@ -64,8 +109,10 @@ class map <T extends Comparable<T>>
             return new node(key, value);
         } else if (Node.key.compareTo(key) > 0) {
             Node.left = insert(Node.left, key, value);
+             parent(Node ,Node.left);
         } else if (Node.key.compareTo(key) < 0) {
             Node.right = insert(Node.right, key, value);
+            parent(Node ,Node.right);
         } else {
             throw new RuntimeException("duplicate Key!");
         }
@@ -193,6 +240,10 @@ class map <T extends Comparable<T>>
 
 
     }
+    public T value (T key)
+    {
+        return find(key).value;
+    }
     public node <T> find (T key) 
     {
         node current = root;
@@ -214,7 +265,7 @@ class map <T extends Comparable<T>>
         return current;
     }
     //delete node
-    private node delete(node Node, T key)
+     node delete(node Node, T key)
     {
         if (Node == null) 
         {
@@ -238,7 +289,7 @@ class map <T extends Comparable<T>>
             {
                 node mostLeftChild = mostLeftChild(Node.right);
                 Node.key = mostLeftChild.key;
-                Node.right = delete(Node.right, mostLeftChild.key);
+                Node.right = delete(Node.right, key(mostLeftChild));
             }
         }
           if (Node != null) 
@@ -249,7 +300,6 @@ class map <T extends Comparable<T>>
     }
     private node mostLeftChild(node Node) {
         node current = Node;
-        /* loop down to find the leftmost leaf */
         while (current.left != null) {
             current = current.left;
         }
@@ -261,4 +311,5 @@ class map <T extends Comparable<T>>
         k=(T)Node.key;
         return k;
     }
+    //iterator
 }
