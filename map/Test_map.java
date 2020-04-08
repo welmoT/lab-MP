@@ -5,32 +5,9 @@ class Test_map
 	{
 
 		Test_map Test = new Test_map();
-		
-		//map M = new map();
-		//Mt.print();
-	     //int mas[100] ;
-	    // double random();
 		Test.example();
 		Test.example1();
 		Test.example2();
-		//if (M.find(4) != null) System.out.println("yes");
-		//else System.out.println("no");
-		//System.out.println("value = " + M.value(5));
-		//M.print();
-
-		//System.out.println(M.description());
-		//M.print();
-		//map Mt = new map(M);
-		//Mt.print();
-		//Mt.DeleteAll();
-		//Mt.print();
-
-		//M.delete(M.root, 3);
-		//System.out.println(M.description());
-		//TreeIterator T = new  TreeIterator(M.root);
-		//T.next();
-		//System.out.println ("iterator"+ T.next().key);
-
 	}
 	
 	void example()
@@ -76,7 +53,7 @@ class Test_map
 		T.next();
 		T.next();
 		System.out.println ("iterator "+ T.next().key);
-		System.out.println("Search element 99 in tree: "+M.find(6));
+		System.out.println("Search element 6 in tree: "+M.find(6));
 	}
 	void example2()
 	{
