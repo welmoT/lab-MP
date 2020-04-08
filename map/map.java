@@ -22,14 +22,6 @@ class node <T extends Comparable<T>>
 		this.parent = null;
 		height = 1;
 	}
-	void copy( node <T> N1)
-	{
-		this.key = N1.key;
-		this.value = N1.value;
-		this.left = N1.left;
-		this.right = N1.right;
-		this.parent = N1.parent;
-	}  
 }
  class TreeIterator {
     private node next;
@@ -46,37 +38,58 @@ class node <T extends Comparable<T>>
     public boolean hasNext(){
         return next != null;
     }
-
-    public node next(){
-        //if(!hasNext()) throw new NoSuchElementException();
+    public node next()
+    {
         node r = next;
-
-        // If you can walk right, walk right, then fully left.
-        // otherwise, walk up until you come from left.
-        if(next.right != null) {
+        if(next.right != null) 
+        {
             next = next.right;
             while (next.left != null)
                 next = next.left;
             return r;
         }
 
-        while(true) {
-            if(next.parent == null) {
+        while(true) 
+        {
+            if(next.parent == null) 
+            {
                 next = null;
                 return r;
             }
-            if(next.parent.left == next) {
+            if(next.parent.left == next) 
+            {
                 next = next.parent;
                return r;
             }
             next = next.parent;
         }
      }
+
  }
 class map <T extends Comparable<T>>
 {
 	node root;
 	int count;
+    map()
+    {
+        count = 0;
+    }
+    map(map B1)
+    {
+        this.count=B1.count;
+        this.root=rootbin(B1.root);
+    }
+    node <T> rootbin(node <T> Node)
+    {
+        if(Node!=null)
+        {
+        node tmp= new node(Node.key, Node.value);
+        tmp.left=rootbin(Node.left);
+        tmp.right=rootbin(Node.right);
+        return tmp;
+        }
+        return null;
+    }
     //help function
 	int height (node <T> Node)//function return heigh
 	{
@@ -105,19 +118,35 @@ class map <T extends Comparable<T>>
     //insert
     node insert(node Node, T key, T value) 
     {
-        if (Node == null) {
+        node tmp;
+        if (Node == null)
+        {
+        
             return new node(key, value);
-        } else if (Node.key.compareTo(key) > 0) {
+        } 
+        else if (Node.key.compareTo(key) > 0) 
+        {
             Node.left = insert(Node.left, key, value);
-             parent(Node ,Node.left);
-        } else if (Node.key.compareTo(key) < 0) {
+            tmp = Node.left;
+            tmp.parent = Node;
+            //Node.left.parent = Tmp;
+        } 
+        else if (Node.key.compareTo(key) < 0) 
+        {
             Node.right = insert(Node.right, key, value);
-            parent(Node ,Node.right);
-        } else {
+            //Node.right.parent = Tmp;
+            tmp = Node.right;
+            tmp.parent = Node;
+        }
+         else 
+         {
             throw new RuntimeException("duplicate Key!");
         }
+      //  if(Node.right != null||Node.left != null )preOrder(Node);
+        //if(Node != null)preOrder( Node);
         return balance(Node);
     }
+
     //balance tree
     node balance(node Node) 
     {
@@ -138,6 +167,7 @@ class map <T extends Comparable<T>>
                 Node = little_right_rotate(Node);
             }
         }
+      //  preOrder( Node);
         return Node;
     }
 	  
@@ -146,49 +176,49 @@ class map <T extends Comparable<T>>
     {
     	node Lf = new node ();
     	Lf = Rgh.left;
-    	//Lf.parent=Rgh;
+    	Lf.parent = Rgh.parent;
     	Rgh.left = null;
     	Rgh.left = Lf.right;
     	Lf.right = Rgh;
+        Lf.right.parent = Lf;
+        if(Lf.parent!= null)
+       {
+            if(Lf.parent.right == Rgh)
+            {
+                Lf.parent.right = Lf;
+            }
+            else Lf.parent.left = Lf;
+       } 
     	Overheigh(Lf);
     	Overheigh(Rgh);
-        System.out.println("rightRT");
+        //System.out.println("rightRT");
     	return Lf;
     }
     node <T> little_left_rotate(node <T> Lf)
     {
     	node Rgh = new node ();
     	Rgh = Lf.right;
+        Rgh.parent = Lf.parent;
     	Lf.right = Rgh.left;
+        Lf.parent = Rgh;
     	Rgh.left = Lf;
+        Rgh.left.parent = Rgh;
+        if(Rgh.parent!= null)
+       {
+            if(Rgh.parent.right == Lf)
+            {
+                Rgh.parent.right = Rgh;
+            }
+            else Rgh.parent.left = Rgh;
+       } 
     	Overheigh(Lf);
     	Overheigh(Rgh);
-        System.out.println("leftRT");
+        //System.out.println("leftRT");
     	return Rgh;
-    }
-    node <T> big_left_rotate(node <T> Lf)
-    {
-        if ( Lf.right == null) 
-        {
-            return Lf;
-        }
-        Lf.right = little_right_rotate(Lf.right);
-        return little_left_rotate(Lf);
-    }
-    node <T> big_right_rotate(node <T> Rgh)
-    {
-        if (Rgh.left == null) 
-        {
-            return Rgh;
-        }
-
-        Rgh.left = little_left_rotate(Rgh.left);
-
-        return little_right_rotate(Rgh);
     }
 //print
     
- void print()
+    void print() //this metod for debugging
     {
         if(this.root != null)
         {
@@ -204,10 +234,11 @@ class map <T extends Comparable<T>>
         if( Node != null)
         {
             print_tree( Node.left );
-            System.out.println(Node.height +"   " + Node.key.toString());
+            System.out.println("key: "+Node.key.toString()+"  value "+Node.value.toString()); //Node.key.toString()
             print_tree( Node.right );
         }
     }
+    
     public String description() {
         return diagramFor(this.root, "", "", "");
     }
@@ -236,9 +267,6 @@ class map <T extends Comparable<T>>
         {
              current.value = value;
         }
-
-
-
     }
     public T value (T key)
     {
@@ -262,6 +290,7 @@ class map <T extends Comparable<T>>
                 current = current.left;
             }
         }
+        //if(current == null)
         return current;
     }
     //delete node
@@ -298,6 +327,27 @@ class map <T extends Comparable<T>>
         }
         return Node;
     }
+     public void DeleteAll()
+    {
+        Delete(root);
+        root=null;
+        count=0;
+    }
+   public void Delete(node <T> Node)
+   {
+       if ( Node.left!= null ) {
+            Delete(Node.left);
+        }
+
+        if ( Node.right!= null ) {
+            Delete(Node.right);
+        }
+
+        Node.left = null;
+        Node.right = null;
+        Node.key = null;
+        Node.value = null;
+   }
     private node mostLeftChild(node Node) {
         node current = Node;
         while (current.left != null) {
@@ -311,5 +361,24 @@ class map <T extends Comparable<T>>
         k=(T)Node.key;
         return k;
     }
-    //iterator
+    //empty
+    boolean empty ()
+    {
+        if(root   == null) return true;
+        else return false;
+    }
+    //check balance
+    boolean CheckBalanceTree (node <T> Node)
+    {
+        int k = 0;
+        if( Node != null)
+        {
+            CheckBalanceTree(Node.left );
+            if(BF(Node) > 1 && BF(Node) <1 ) k++;
+            CheckBalanceTree( Node.right );
+        }
+        if (k != 0) return false;
+        else
+        return true;
+    }
 }
