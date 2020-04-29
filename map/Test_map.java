@@ -18,7 +18,7 @@ class Test_map
 		Random random = new Random();
 		int rnd;
 		map M = new map();
-		for(int i = 0; i<100; i++)
+		for(int i = 0; i < 100; i++)
 		{
 			
 			rnd = random.nextInt(diff + 1) + min;
