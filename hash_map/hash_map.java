@@ -38,8 +38,7 @@ class hash_map < T extends Comparable <T> >
 		}
 		int temp = E.key.hashCode();
 		int h = temp % Array.length; //здесь делю на размерность массива, а не на количество списков, как указано в описании ЛР
-		if(h == 0) h = Array.length -1;
-		else h--;
+		//h = Array.length -1;
 		//System.out.println(h);
 		for (int i = 0; i < Array[h].size();i++)
 		{
