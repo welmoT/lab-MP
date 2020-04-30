@@ -8,12 +8,13 @@ public class test_hash_map
 	}
 	 static void example ()
 	{
-		int array []= {1,7,87,5556,99,6,4848,78,25,6,5,89,65,33,11,9594,63,588,45,85,333,4,8,67,598,7264,90,66544,787,45878};//24
+		int array []= {1,7,7,5556,99,6,4848,78,25,6,5,89,65,33,11,9594,63,588,45,85,333,4,8,67,598,7264,90,66544,787,45878};//24
+		String Ar [] = {"hello","frog","set","take","cat","unit","true","be","pen","book","swim","ion","like","dislike","house","map","put","get","a","b","c","d","h","e","big","dont","can","should","must","very","often"};
 		hash_map M = new hash_map(20);
 		element E;
 		for(int i = 0; i < array.length; i++)
 		{
-			 E = new element(array[i], array[i] + 6);
+			 E = new element(array[i], Ar[i]);
 			M.add(E);
 		}
 		M.print();

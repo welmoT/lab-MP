@@ -31,7 +31,7 @@ class hash_map < T extends Comparable <T> >
 	}
 	void add(element E)
 	{
-		
+		int count = 0;
 		if(level > 4)
 		{
 		 rehash(Array.length*2+1);
@@ -41,9 +41,18 @@ class hash_map < T extends Comparable <T> >
 		if(h == 0) h = Array.length -1;
 		else h--;
 		//System.out.println(h);
-		if(Array[h].isEmpty() == true) count_list++;
-		Array[h].add(E);
-		count_element++;
+		for (int i = 0; i < Array[h].size();i++)
+		{
+			if(Array[h].get(i).key == E.key) count++;
+		}
+		if (count == 0)
+		{
+			if(Array[h].isEmpty() == true) count_list++;
+			Array[h].add(E);
+			count_element++;
+		}
+		else System.out.println ("this element = " + E.key + " is containing in hash_map");
+		level = crowding();
 	}
 	//private  ArrayList < T > Array = new ArrayList < T > ();
 	void print()
